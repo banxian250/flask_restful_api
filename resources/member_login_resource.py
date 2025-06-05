@@ -1,7 +1,8 @@
-from flask_restful import Resource
+from flask_restful import Resource,reqparse
 from utils.rsa_helper import RSAHelper
 from resources import api
 from wechatpy import WeChatClient
+from flask import request, jsonify
 
 class MemberLoginResource(Resource):
     # def post(self):
@@ -12,10 +13,22 @@ class MemberLoginResource(Resource):
     #     authorization = rsa_helper.encrypt_str(str({'member_id': 1}))
     #     return {'authorization': authorization}
     def post(self):
+        # # 1. 创建参数解析器
+        # parser = reqparse.RequestParser()
+        # # 2. 添加要解析的参数
+        # parser.add_argument('code', type=str, required=True, help='微信code不能为空')
+        # # 3. 解析请求参数
+        # args = parser.parse_args()  # 自动校验参数，如果缺少code会返回400错误
+        # # 4. 获取解析后的参数
+        # code = args['code']
+
+        data = request.get_json()
+        code = data.get('code')
+
         app_id = 'wx7d2f57c2a1a22410'
         app_secret = 'f307756ed1cedb119f85851cd9840b27'
         client = WeChatClient(app_id, app_secret)
-        login_res = client.wxa.code_to_session('0a1mEg0w3sko253OhH0w3qI3fb2mEg0r')
+        login_res = client.wxa.code_to_session(code)
         return login_res
 
 api.add_resource(MemberLoginResource, '/member/login')
