@@ -1,8 +1,13 @@
-from flask_restful import Resource,reqparse
+import code
+
+from flask_restful import Resource, reqparse
 from utils.rsa_helper import RSAHelper
 from resources import api
 from wechatpy import WeChatClient
 from flask import request, jsonify
+from utils.mysql_helper import MySQLHelper
+from managers.member import Member
+
 
 class MemberLoginResource(Resource):
     # def post(self):
@@ -25,10 +30,12 @@ class MemberLoginResource(Resource):
         data = request.get_json()
         code = data.get('code')
 
-        app_id = 'wx7d2f57c2a1a22410'
-        app_secret = 'f307756ed1cedb119f85851cd9840b27'
-        client = WeChatClient(app_id, app_secret)
-        login_res = client.wxa.code_to_session(code)
-        return login_res
+        # app_id = 'wx7d2f57c2a1a22410'
+        # app_secret = 'f307756ed1cedb119f85851cd9840b27'
+
+        member = Member()
+        member_login_res = member.member_login(code)
+        return member_login_res
+
 
 api.add_resource(MemberLoginResource, '/member/login')
