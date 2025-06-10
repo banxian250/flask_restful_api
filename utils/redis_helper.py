@@ -7,7 +7,7 @@ class RedisHelper:
         self.pool = redis.ConnectionPool(
             host='101.43.65.120',
             port=6379,
-            password='liu281265',
+            password='123456',
             decode_responses=True,
             db=0
         )

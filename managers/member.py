@@ -6,6 +6,7 @@ from managers.number_generator import NumberGenerator
 from wechatpy import WeChatClient
 import uuid
 from utils.redis_helper import RedisHelper
+import json
 
 
 class Member():
@@ -36,11 +37,12 @@ class Member():
             _member_id = member_id
             _openid = login_res['openid']
         else:
-            _member_id = member_info['member_id']
+            _member_id = member_info['id']
             _openid = member_info['openid']
 
         authorization = uuid.uuid4().hex
         redis_helper = RedisHelper()
-        redis_helper.set(authorization, {'member_id': _member_id, 'openid': _openid}, 600)
+        cache_data = json.dumps({'member_id': _member_id, 'openid': _openid})
+        redis_helper.set(f'login:{authorization}', cache_data, 600)
 
         return {'authorization': authorization}
