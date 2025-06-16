@@ -4,6 +4,8 @@ from resources.auth_resource import AuthResource
 
 class MemberResource(AuthResource):
     def get(self, member_id: int, current_user=None):
+        print(1234556)
+        print(current_user)
         return {'method': 'get', 'member_id': member_id, 'user': current_user}
 
     def put(self, member_id: int, current_user=None):

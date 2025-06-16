@@ -1,5 +1,6 @@
 from functools import wraps
 from flask import request, jsonify
+from utils.redis_helper import RedisHelper
 
 # 这里可以替换为实际的用户验证逻辑，如数据库查询、JWT验证等
 def verify_token(token):
@@ -10,9 +11,14 @@ def verify_token(token):
     """
     # 示例：简单的token验证
     # 在实际应用中，您应该实现更安全的验证逻辑
-    if token == "valid_token":
-        return {"user_id": 1, "username": "admin"}
-    return None
+    # if token == "valid_token":
+    #     return {"user_id": 1, "username": "admin"}
+    redis_helper = RedisHelper()
+    authorization_res = redis_helper.get(f'login:{token}')
+    if not authorization_res:
+        return None
+    else:
+        return authorization_res
 
 def require_auth(f):
     """

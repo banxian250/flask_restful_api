@@ -43,6 +43,16 @@ class Member():
         authorization = uuid.uuid4().hex
         redis_helper = RedisHelper()
         cache_data = json.dumps({'member_id': _member_id, 'openid': _openid})
-        redis_helper.set(f'login:{authorization}', cache_data, 600)
+        redis_helper.set(f'login:{authorization}', cache_data, 60 * 60 * 24)
 
         return {'authorization': authorization}
+
+    def get_member(self, request_headers):
+        authorization_header = request_headers.get('Authorization')
+        if not authorization_header:
+            return None
+        else:
+            redis_helper = RedisHelper()
+            authorization = authorization_header.replace('Bearer ', '')
+            authorization_res = redis_helper.get(f'login:{authorization}')
+            return authorization_res

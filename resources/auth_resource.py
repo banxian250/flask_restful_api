@@ -25,6 +25,8 @@ class AuthResource(Resource):
         # 通常Authorization头的格式是"Bearer token"
         try:
             token_type, token = auth_header.split()
+            print('token_type')
+            print(token_type)
             if token_type.lower() != 'bearer':
                 return {"error": "无效的认证类型"}, 401
         except ValueError:
