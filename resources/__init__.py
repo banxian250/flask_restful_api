@@ -1,7 +1,11 @@
 from flask import Flask
 from flask_restful import Api
+from config import Config
+from models.base_cfg import db
 
 app = Flask(__name__)
+app.config.from_object(Config)
+db.init_app(app)
 # api = Api(app)
 
 # 保存Flask原始的异常处理器
