@@ -8,6 +8,7 @@ import uuid
 from utils.redis_helper import RedisHelper
 import json
 from models.miniprogram_member import MiniProgramMember
+from repositorys.miniprogram_member import MiniProgramMemberRepository
 
 
 class Member():
@@ -33,16 +34,18 @@ class Member():
         if not member_info:
             id_generator = NumberGeneratorManager()
             member_id = id_generator.get('miniprogram_member', 1)
-            insert_sql = '''insert into miniprogram_member(id, openid, create_time)
-                            values (%(member_id)s, %(openid)s, %(create_time)s)'''
-            insert_params = {'member_id': member_id, 'openid': login_res['openid'], 'create_time': datetime.now()}
-            db = MySQLHelper()
-            db.insert(insert_sql, insert_params)
+            # insert_sql = '''insert into miniprogram_member(id, openid, create_time)
+            #                 values (%(member_id)s, %(openid)s, %(create_time)s)'''
+            # insert_params = {'member_id': member_id, 'openid': login_res['openid'], 'create_time': datetime.now()}
+            # db = MySQLHelper()
+            # db.insert(insert_sql, insert_params)
+            MiniProgramMemberRepository.create(member_id, login_res['openid'], datetime.now())
             _member_id = member_id
             _openid = login_res['openid']
         else:
-            _member_id = member_info['id']
-            _openid = member_info['openid']
+            member_info_dict = member_info.to_dict()
+            _member_id = member_info_dict['id']
+            _openid = member_info_dict['openid']
 
         authorization = uuid.uuid4().hex
         redis_helper = RedisHelper()

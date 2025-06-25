@@ -5,10 +5,10 @@ from extensions import db
 class NumberGeneratorRepository():
     @classmethod
     def create(cls, table_name, current_number):
-        member = NumberGenerator(table_name=table_name, current_number=current_number)
-        db.session.add(member)
+        number = NumberGenerator(table_name=table_name, current_number=current_number)
+        db.session.add(number)
         db.session.commit()
-        return member
+        return number
 
     @classmethod
     def update(cls, filters: dict, update_fields: dict):
